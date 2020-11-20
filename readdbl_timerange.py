@@ -40,7 +40,7 @@ def readsinglefile(filedirectory,timestep,N,field) :
 
 	filedirectory = os.path.abspath(filedirectory) + '/'
 
-	filename = filedirectory+field+"%04d"%i+".dbl"
+	filename = filedirectory+field+"%04d"%timestep+".dbl"
 
 	try:
 			file = open(filename,'rb')
