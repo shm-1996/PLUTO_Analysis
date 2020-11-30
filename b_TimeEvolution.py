@@ -43,16 +43,16 @@ def gaus(x,a,x0,sigma):
 		    return a*np.exp(-(x-x0)**2/(2*sigma**2))*np.exp(x)	
 
 def calculate_b_direct(directory,time,N) : 
-	rho1d    = read.readbinary(directory,N,1,time,time)*ref.unit_Density
+	rho1d	= read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
 	try :
-		Tgas1d    = read.readbinary(directory,N,5,time,time)
+		Tgas1d    = read.readsinglefile(directory,time,N,'Tgas')
 		Tgas1d = np.mean(Tgas1d)
 	except :
 		print("Setting Tgas to 10 K")
 		Tgas1d = 10.
-	vx1d    = read.readbinary(directory,N,2,time,time)*ref.unit_Velocity
-	vy1d    = read.readbinary(directory,N,3,time,time)*ref.unit_Velocity
-	vz1d    = read.readbinary(directory,N,4,time,time)*ref.unit_Velocity
+	vx1d    = read.readsinglefile(directory,time,N,'velx')*ref.unit_Velocity
+	vy1d    = read.readsinglefile(directory,time,N,'vely')*ref.unit_Velocity
+	vz1d    = read.readsinglefile(directory,time,N,'velz')*ref.unit_Velocity
 
 	vcom_x = np.average(vx1d[0],weights = rho1d[0])
 	vcom_y = np.average(vy1d[0],weights = rho1d[0])
@@ -73,12 +73,12 @@ def calculate_b_direct(directory,time,N) :
 def calculate_b(directory,time,N) :
 	tbeg = time
 	tend = tbeg 
-	rho1d    = read.readbinary(directory,N,1,tbeg,tend)*ref.unit_Density
-	iongas1d = read.readbinary(directory,N,6,tbeg,tend)
-	Tgas1d    = read.readbinary(directory,N,5,tbeg,tend)
-	vx1d    = read.readbinary(directory,N,2,tbeg,tend)*ref.unit_Velocity
-	vy1d    = read.readbinary(directory,N,3,tbeg,tend)*ref.unit_Velocity
-	vz1d    = read.readbinary(directory,N,4,tbeg,tend)*ref.unit_Velocity
+	rho1d	= read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
+	iongas1d = read.readsinglefile(directory,time,N,'ionx')
+	Tgas1d    = read.readsinglefile(directory,time,N,'Tgas')
+	vx1d    = read.readsinglefile(directory,time,N,'velx')*ref.unit_Velocity
+	vy1d    = read.readsinglefile(directory,time,N,'vely')*ref.unit_Velocity
+	vz1d    = read.readsinglefile(directory,time,N,'velz')*ref.unit_Velocity
 
 	
 
