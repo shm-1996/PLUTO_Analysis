@@ -14,22 +14,22 @@ args = vars(ap.parse_args())
 
 def create_files(directory,N=200,time=100) :
 
-	ionx = np.full(N*N*N,0.0)
+	ionx = np.full(N*N*N,1.e-40)
 	file = open(directory+"ionx.{:04d}.dbl".format(time),"wb")
 	file.write(ionx)
 	file.close()
 
-	ueuv = np.full(N*N*N,0.0)
+	ueuv = np.full(N*N*N,1.e-40)
 	file = open(directory+"ueuv.{:04d}.dbl".format(time),"wb")
 	file.write(ueuv)
 	file.close()
 
-	urec = np.full(N*N*N,0.0)
+	urec = np.full(N*N*N,1.e-40)
 	file = open(directory+"urec.{:04d}.dbl".format(time),"wb")
 	file.write(urec)
 	file.close()
 
-	phi = np.full(N*N*N,0.0)
+	phi = np.full(N*N*N,1.e-40)
 	file = open(directory+"phi.{:04d}.dbl".format(time),"wb")
 	file.write(phi)
 	file.close()
