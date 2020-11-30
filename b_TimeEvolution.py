@@ -50,9 +50,9 @@ def calculate_b_direct(directory,time,N) :
 	except :
 		print("Setting Tgas to 10 K")
 		Tgas1d = 10.
-	vx1d    = read.readsinglefile(directory,time,N,'velx')*ref.unit_Velocity
-	vy1d    = read.readsinglefile(directory,time,N,'vely')*ref.unit_Velocity
-	vz1d    = read.readsinglefile(directory,time,N,'velz')*ref.unit_Velocity
+	vx1d    = read.readsinglefile(directory,time,N,'vx1')*ref.unit_Velocity
+	vy1d    = read.readsinglefile(directory,time,N,'vx2')*ref.unit_Velocity
+	vz1d    = read.readsinglefile(directory,time,N,'vx3')*ref.unit_Velocity
 
 	vcom_x = np.average(vx1d,weights = rho1d)
 	vcom_y = np.average(vy1d,weights = rho1d)
@@ -76,9 +76,9 @@ def calculate_b(directory,time,N) :
 	rho1d	= read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
 	iongas1d = read.readsinglefile(directory,time,N,'ionx')
 	Tgas1d    = read.readsinglefile(directory,time,N,'Tgas')
-	vx1d    = read.readsinglefile(directory,time,N,'velx')*ref.unit_Velocity
-	vy1d    = read.readsinglefile(directory,time,N,'vely')*ref.unit_Velocity
-	vz1d    = read.readsinglefile(directory,time,N,'velz')*ref.unit_Velocity
+	vx1d    = read.readsinglefile(directory,time,N,'vx1')*ref.unit_Velocity
+	vy1d    = read.readsinglefile(directory,time,N,'vx2')*ref.unit_Velocity
+	vz1d    = read.readsinglefile(directory,time,N,'vx3')*ref.unit_Velocity
 
 	
 
