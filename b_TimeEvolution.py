@@ -54,18 +54,18 @@ def calculate_b_direct(directory,time,N) :
 	vy1d    = read.readsinglefile(directory,time,N,'vely')*ref.unit_Velocity
 	vz1d    = read.readsinglefile(directory,time,N,'velz')*ref.unit_Velocity
 
-	vcom_x = np.average(vx1d[0],weights = rho1d[0])
-	vcom_y = np.average(vy1d[0],weights = rho1d[0])
-	vcom_z = np.average(vz1d[0],weights = rho1d[0])
-	vx = vx1d[0]-vcom_x
-	vy = vy1d[0]-vcom_y
-	vz = vz1d[0]-vcom_z
+	vcom_x = np.average(vx1d,weights = rho1d)
+	vcom_y = np.average(vy1d,weights = rho1d)
+	vcom_z = np.average(vz1d,weights = rho1d)
+	vx = vx1d-vcom_x
+	vy = vy1d-vcom_y
+	vz = vz1d-vcom_z
 	vel = np.sqrt(vx**2 + vy**2 + vz**2)
 	cs = np.sqrt(k_boltzmann*Tgas1d/m)
 
 	Mach_No = np.sqrt(np.mean(vel**2))/np.mean(cs)
-	scale_dens = np.log(rho1d[0]/np.mean(rho1d[0]))
-	sigma_scaled = np.std(rho1d[0]/np.mean(rho1d[0]))
+	scale_dens = np.log(rho1d/np.mean(rho1d))
+	sigma_scaled = np.std(rho1d/np.mean(rho1d))
 
 	b = sigma_scaled/Mach_No
 	return sigma_scaled, Mach_No, b
@@ -82,22 +82,22 @@ def calculate_b(directory,time,N) :
 
 	
 
-	indices = np.where(iongas1d[0]<1.e-7)
-	vcom_x = np.average(vx1d[0][indices[0]],weights = rho1d[0][indices[0]])
-	vcom_y = np.average(vy1d[0][indices[0]],weights = rho1d[0][indices[0]])
-	vcom_z = np.average(vz1d[0][indices[0]],weights = rho1d[0][indices[0]])
-	vx_neutral = vx1d[0][indices[0]]-vcom_x
-	vy_neutral = vy1d[0][indices[0]]-vcom_y
-	vz_neutral = vz1d[0][indices[0]]-vcom_z
+	indices = np.where(iongas1d<1.e-7)
+	vcom_x = np.average(vx1d[indices[0]],weights = rho1d[indices[0]])
+	vcom_y = np.average(vy1d[indices[0]],weights = rho1d[indices[0]])
+	vcom_z = np.average(vz1d[indices[0]],weights = rho1d[indices[0]])
+	vx_neutral = vx1d[indices[0]]-vcom_x
+	vy_neutral = vy1d[indices[0]]-vcom_y
+	vz_neutral = vz1d[indices[0]]-vcom_z
 
 
 	# In[68]:
 
 
-	mu1d = (iongas1d[0][indices[0]]*0.5+(1.-iongas1d[0])[indices[0]]*1.0)*m
-	cs_neutral = np.sqrt(k_boltzmann*Tgas1d[0][indices[0]]/mu1d)
+	mu1d = (iongas1d[indices[0]]*0.5+(1.-iongas1d)[indices[0]]*1.0)*m
+	cs_neutral = np.sqrt(k_boltzmann*Tgas1d[indices[0]]/mu1d)
 	vel_neutral = np.sqrt(vx_neutral**2+vy_neutral**2+vz_neutral**2)
-	rho_neutral = rho1d[0][indices[0]]
+	rho_neutral = rho1d[indices[0]]
 	nodens_neutral = np.log10(rho_neutral/(constant.mH_HydrogenMass))
 	RHO_MEAN = np.mean(rho_neutral)
 
