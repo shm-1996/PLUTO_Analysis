@@ -13,12 +13,11 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	#Compute Column Densities
 	while time <=tend :
-		rho1d    = read.readbinary(directory,N,1,time,time)*ref.unit_Density
-		iongas1d = read.readbinary(directory,N,6,time,time)
+		rho1d    = read.readsinglefile(directory,N,1,time,time)*ref.unit_Density
+		iongas1d = read.readsinglefile(directory,N,6,time,time)
 		mu1d = (iongas1d*0.5+(1.-iongas1d)*1.0)*m
 		no_rho = np.reshape(rho1d/mu1d,(N,N,N))
 		columndens_z[time-tstart] = no_rho.sum(0) *dl 
-		columndens_x[time-tstart] = no_rho.sum(2) *dl 
 		time = time+1
 
 	max_columndens_z = np.max(np.log10(columndens_z))
