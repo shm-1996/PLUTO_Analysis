@@ -18,12 +18,13 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		mu1d = (iongas1d*0.5+(1.-iongas1d)*1.0)*m
 		no_rho = np.reshape(rho1d/mu1d,(N,N,N))
 		columndens_z[time-tstart] = no_rho.sum(0) *dl 
+		columndens_x[time-tstart] = no_rho.sum(2) *dl 
 		time = time+1
 
 	max_columndens_z = np.max(np.log10(columndens_z))
 	min_columndens_z = np.min(np.log10(columndens_z))
-	max_columndens_x = np.max(np.log10(columndens_x))
-	min_columndens_x = np.min(np.log10(columndens_x))
+	max_columndens_x = np.max(np.log10(columndens_z))
+	min_columndens_x = np.min(np.log10(columndens_z))
 
 	if(outdir is None):
 		outdir = directory + '/Column_Density/'
@@ -71,7 +72,7 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		cbar.ax.set_xlabel(r"$\log_{10}\mathrm{N}_x\;(\mathrm{cm}^{-2})$",rotation=0,labelpad=5,fontsize=16)
 		plt.setp(axs[0].spines.values(),linewidth=2.0)
 		plt.setp(axs[1].spines.values(),linewidth=2.0)
-		plt.savefig(output_combined+'%04d'%time+"CombinedColumn.eps",bbox_inches='tight')
+		plt.savefig(outdir+'%04d'%time+"CombinedColumn.eps",bbox_inches='tight')
 		plt.close(fig)
 		time = time+1
 
