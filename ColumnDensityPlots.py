@@ -89,20 +89,20 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 if __name__ == "__main__":
 
 	#Parsing Arguments
-    ############################################################################
-    ap = argparse.ArgumentParser(description=
-        'Command Line Inputs for column density Plots. ')
-    ap.add_argument('-directory',action='store',type=str,default='./',
-        help='Directory of output files. By default current working directory." ')
-    ap.add_argument('-outdir',action='store',type=str,default=None,
-        help = 'Output directory for files.')
-    ap.add_argument('-tstart',action='store',type=int,default=100,
-        help = 'Start timestep.')
-    ap.add_argument('-tend',action='store',type=int,default=300,
-        help = 'End timestep.')
-    ap.add_argument('-N',action='store',type=int,default=200,
-        help = 'Resolution')
-    args = vars(ap.parse_args())
+	############################################################################
+	ap = argparse.ArgumentParser(description=
+	    'Command Line Inputs for column density Plots. ')
+	ap.add_argument('-directory',action='store',type=str,default='./',
+	    help='Directory of output files. By default current working directory." ')
+	ap.add_argument('-outdir',action='store',type=str,default=None,
+	    help = 'Output directory for files.')
+	ap.add_argument('-tstart',action='store',type=int,default=100,
+	    help = 'Start timestep.')
+	ap.add_argument('-tend',action='store',type=int,default=300,
+	    help = 'End timestep.')
+	ap.add_argument('-N',action='store',type=int,default=200,
+	    help = 'Resolution')
+	args = vars(ap.parse_args())
 
 
 	plotColumnDensity(args['directory'],args['tstart'],args['tend'],args['N'],args['outdir'])
