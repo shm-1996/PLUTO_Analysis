@@ -1,10 +1,4 @@
-import numpy as np
-import readdbl_timerange as read
-import ReferenceUnits as ref
-import matplotlib.pyplot as plt
-import PhysicalConstantsCGS as constant 
-import matplotlib.patches as patches
-import os
+from header import *
 
 def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
