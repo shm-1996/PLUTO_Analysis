@@ -1,5 +1,7 @@
 from header import *
-
+import matplotlib as mpl
+mpl.rcParams.update(mpl.rcParamsDefault)
+mpl.style.use('classic')
 def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	directory = os.path.abspath(directory)
