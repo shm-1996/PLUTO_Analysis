@@ -28,13 +28,12 @@ def std_error(sigma_s,M,error_s,error_M) :
 def gaus(x,a,x0,sigma):
 		    return a*np.exp(-(x-x0)**2/(2*sigma**2))*np.exp(x)	
 
-def calculate_b_direct(directory,time,N) : 
+def calculate_b_direct(directory,time,N,Use_temp=False) : 
 	rho1d	= read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
-	try :
+	if(Use_temp is True) :
 		Tgas1d    = read.readsinglefile(directory,time,N,'Tgas')
 		Tgas1d = np.mean(Tgas1d)
-	except :
-		print("Setting Tgas to 10 K")
+	else :
 		Tgas1d = 10.
 	vx1d    = read.readsinglefile(directory,time,N,'vx1')*ref.unit_Velocity
 	vy1d    = read.readsinglefile(directory,time,N,'vx2')*ref.unit_Velocity
@@ -203,34 +202,8 @@ def calculate_b(directory,time,N) :
 	else :
 		return sigma_s,error_sigma,M,b1
 
-
-
-
-
-
-if __name__ == "__main__":
-
-	ap = argparse.ArgumentParser(description='Command Line Inputs for b computing script.')
-	ap.add_argument('-directory', metavar='Output Directory', action='store', type=str,
-		default=os.path.realpath('./')+'/',help='Output files directory')
-	ap.add_argument('-N', metavar='Resolution', action='store', type=int,default=200,help='Resolution of Simulation',dest='N')
-	ap.add_argument('-output', metavar='Output Directory of table', action='store', type=str,
-	                default=os.path.realpath('./')+'/',help='Directory to save table.')
-	ap.add_argument('-tstart', metavar='t0', action='store', type=int,default=100,
-	            help='Starting timestep.')
-	ap.add_argument('-tend', metavar='tend', action='store', type=int,default=300,
-	            help='Last timestep.')
-	args = vars(ap.parse_args())
-
-
-	system_t0 = time.time()
-	directory = os.path.abspath(args['directory']) + '/'
-	output = os.path.abspath(args['output']) + '/'
-	N = args['N']
-	tstart = args['tstart']
-	tfinish = args['tend']
-	time = tstart
-
+def calculate_b_range(directory,N,tstart,tfinish):
+	print("Calculating b in time range {} to {}".format(tstart,tfinish))
 	SIGMA_S = np.zeros(tfinish-tstart+1)
 	ERROR_S = np.zeros(tfinish-tstart+1)
 	MACH_NO = np.zeros(tfinish-tstart+1)
@@ -239,21 +212,7 @@ if __name__ == "__main__":
 	B_VALUE = np.zeros(tfinish-tstart+1)
 	B_ERROR = np.zeros(tfinish-tstart+1)
 
-
-
-
-
-
-	if(use_Density_Threshold) :
-	    output = output + 'Density_Threshold/'
-	    if not os.path.exists(output):
-	        os.makedirs(output)
-	else :
-	    output = output + 'Region_Threshold/'
-	    if not os.path.exists(output):
-	        os.makedirs(output)
-
-
+	time = tstart
 	while time <=tfinish :
 
 		if(fit_lognormal_M) :
@@ -274,23 +233,115 @@ if __name__ == "__main__":
 		print("%d \n"%time)
 		time = time + 1
 
+	if(fit_lognormal_M):
+		return SIGMA_S,ERROR_S,MACH_NO,ERROR_M,B_VALUE,B_ERROR
+	else:
+		return SIGMA_S,ERROR_S,MACH_NO,B_VALUE,B_ERROR
 
-	## B Values Obtained
-	time_column = np.arange((tstart-100)*10,(tfinish-100+1)*10,10)
-	if(fit_lognormal_M) :
-		header = '1. Time(Kyr) \t sigma_s \t Error_s \t Mach No \t Error_M \t b \t error_b \n\n'
-		text_columns = np.column_stack((time_column,SIGMA_S,ERROR_S,MACH_NO,ERROR_M,B_VALUE,B_ERROR))
-		np.savetxt(output+'b_timevariation_LognormalM.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)
+
+def calculate_b_directrange(directory,N,tstart,tfinish):
+	print("Calculating b in time range {} to {}".format(tstart,tfinish))
+	SIGMA_S = np.zeros(tfinish-tstart+1)
+	MACH_NO = np.zeros(tfinish-tstart+1)
+	B_VALUE = np.zeros(tfinish-tstart+1)
+
+	time = tstart
+	while time <=tfinish :
+
+		sigma_s,M,b1 = calculate_b_direct(directory,time,N)
+
+		SIGMA_S[time-tstart] = sigma_s
+		MACH_NO[time-tstart] = M 
+		B_VALUE[time-tstart] = b1 
+		time = time + 1
+	return SIGMA_S,MACH_NO,B_VALUE
+
+
+def plot_quantities(tfinish,Sigma_s,Mach_No,b,save=False,outdir=None):
+	print("Plotting summarised b quantities.")
+
+	fig,axs = plt.subplots(nrows=3,figsize=(8,6),sharex=True)
+	time = np.linspace(0,tfinish,tfinish+1)*10.0
+	axs[0].plot(time,Sigma_s,'.-')
+	axs[0].set_ylabel(r'$\sigma_s$')
+
+	axs[1].plot(time,Mach_No,'.-')
+	axs[1].set_ylabel(r'$\mathcal{M}$')
+
+	axs[2].plot(time,b,'.-')
+	axs[2].set_xlabel(r'$ t \, (\mathrm{kyr})$')
+	axs[2].set_ylabel(r'$b$')
+
+	if(outdir is None):
+		outdir = os.getcwd() + '/'
+	if(save):
+		plt.savefig(outdir+'b_summary',bbox_inches='tight')
+	else:
+		plt.show()
+
+if __name__ == "__main__":
+
+	ap = argparse.ArgumentParser(description='Command Line Inputs for b computing script.')
+	ap.add_argument('-directory', metavar='Output Directory', action='store', type=str,
+		default=os.path.realpath('./')+'/',help='Output files directory')
+	ap.add_argument('-N', metavar='Resolution', action='store', type=int,default=200,help='Resolution of Simulation',dest='N')
+	ap.add_argument('-output', metavar='Output Directory of table', action='store', type=str,
+	                default=os.path.realpath('./')+'/',help='Directory to save table.')
+	ap.add_argument('-tstart', metavar='t0', action='store', type=int,default=100,
+	            help='Starting timestep.')
+	ap.add_argument('-tend', metavar='tend', action='store', type=int,default=300,
+	            help='Last timestep.')
+	ap.add_argument('-direct', action='store_true',
+					help='Calculate b from direct formulation without fitting assuming isothermal.')
+	ap.add_argument('-table',action='store_true',
+				help='Flag to write b to table. Default false.')
+	args = vars(ap.parse_args())
+
+
+	directory = os.path.abspath(args['directory']) + '/'
+	output = os.path.abspath(args['output']) + '/'
+	N = args['N']
+	tstart = args['tstart']
+	tfinish = args['tend']
+	
+
+	if(args['direct'] is True):
+		Sigma_s, Mach_No, b = calculate_b_directrange(directory,N,tstart,tfinish)
+	else:
+		Sigma_s, Error_s, Mach_No, b, Error_b = calculate_b_range(directory,N,tstart,tfinish)
+
+
+	if(use_Density_Threshold) :
+	    output = output + 'Density_Threshold/'
+	    if not os.path.exists(output):
+	        os.makedirs(output)
 	else :
-		header = '1. Time(Kyr) \t sigma_s \t Error_s \t Mach No \t b \t error_b \n\n'
-		text_columns = np.column_stack((time_column,SIGMA_S,ERROR_S,MACH_NO,B_VALUE,B_ERROR))
-		np.savetxt(output+'b_timevariation.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)	
+	    output = output + 'Region_Threshold/'
+	    if not os.path.exists(output):
+	        os.makedirs(output)
+
+	
+	if(args['table'] is True):
+		print("Writing to table")
+
+		# Write Table of b
+		time_column = np.arange((tstart-100)*10,(tfinish-100+1)*10,10)
+		if(fit_lognormal_M) :
+			header = '1. Time(Kyr) \t sigma_s \t Error_s \t Mach No \t Error_M \t b \t error_b \n\n'
+			text_columns = np.column_stack((time_column,SIGMA_S,ERROR_S,MACH_NO,ERROR_M,B_VALUE,B_ERROR))
+			np.savetxt(output+'b_timevariation_LognormalM.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)
+		elif(args['direct'] is True) :
+			header = '1. Time(Kyr) \t sigma_s \t Error_s \t Mach No \t b \t error_b \n\n'
+			text_columns = np.column_stack((time_column,SIGMA_S,MACH_NO,B_VALUE))
+			np.savetxt(output+'b_direct.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)
+		else:
+			header = '1. Time(Kyr) \t sigma_s \t Error_s \t Mach No \t b \t error_b \n\n'
+			text_columns = np.column_stack((time_column,SIGMA_S,ERROR_S,MACH_NO,B_VALUE,B_ERROR))
+			np.savetxt(output+'b_timevariation.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)	
+	
+	plot_quantities(tfinish-tstart,Sigma_s,Mach_No,b,save=True,outdir=directory)
 
 	print('Time Variation of b Calculated\n\n')	
-	import time as time
-	system_t1 = time.time()
-	total_time = system_t1-system_t0
-	print('\n Time Taken = %f seconds'%total_time)
 
 
 
