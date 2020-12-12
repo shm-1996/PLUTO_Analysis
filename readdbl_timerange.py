@@ -66,21 +66,21 @@ def readsinglefile(filedirectory,timestep,N,field,code_units=False) :
 	if(code_units):
 		unit_factor = 1.0
 	else:
-		if(field == 'rho') : unit_factor = ref.unit_Density
-		elif(field == 'vx1') : unit_factor = ref.unit_Velocity
-		elif(field == 'vx2') : unit_factor = ref.unit_Velocity
-		elif(field == 'vx3') : unit_factor = ref.unit_Velocity
-		elif(field == 'Tgas') : unit_factor = ref.unit_Temperature
-		elif(field == 'ionx') : unit_factor = 1.0
-		elif(field == 'iony') : unit_factor = 1.0
-		elif(field == 'prs') : unit_factor = ref.unit_Pressure
-		elif(field == 'ueuv') : unit_factor = 1.0/ref.unit_Volume
-		elif(field == 'urec') : unit_factor = 1.0/ref.unit_Volume
-		elif(field == 'fun') : unit_factor = 1.0
-		elif(field == 'bx1') : unit_factor = ref.unit_MagneticField
-		elif(field == 'bx2') : unit_factor = ref.unit_MagneticField
-		elif(field == 'bx3') : unit_factor = ref.unit_MagneticField
-		elif(field == 'phi') : unit_factor = ref.unit_GravPotential
+		if(field == 'rho.') : unit_factor = ref.unit_Density
+		elif(field == 'vx1.') : unit_factor = ref.unit_Velocity
+		elif(field == 'vx2.') : unit_factor = ref.unit_Velocity
+		elif(field == 'vx3.') : unit_factor = ref.unit_Velocity
+		elif(field == 'Tgas.') : unit_factor = ref.unit_Temperature
+		elif(field == 'ionx.') : unit_factor = 1.0
+		elif(field == 'iony.') : unit_factor = 1.0
+		elif(field == 'prs.') : unit_factor = ref.unit_Pressure
+		elif(field == 'ueuv.') : unit_factor = 1.0/ref.unit_Volume
+		elif(field == 'urec.') : unit_factor = 1.0/ref.unit_Volume
+		elif(field == 'fun.') : unit_factor = 1.0
+		elif(field == 'bx1.') : unit_factor = ref.unit_MagneticField
+		elif(field == 'bx2.') : unit_factor = ref.unit_MagneticField
+		elif(field == 'bx3.') : unit_factor = ref.unit_MagneticField
+		elif(field == 'phi.') : unit_factor = ref.unit_GravPotential
 		else : raise ValueError('The field flag does not exist')
 
 	data = data*unit_factor
