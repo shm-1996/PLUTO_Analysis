@@ -2,6 +2,7 @@ from header import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.style.use('classic')
+import tqdm
 def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	directory = os.path.abspath(directory)
@@ -74,13 +75,48 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		cbar.ax.set_xlabel(r"$\log_{10}\mathrm{N}_x\;(\mathrm{cm}^{-2})$",rotation=0,labelpad=5,fontsize=16)
 		plt.setp(axs[0].spines.values(),linewidth=2.0)
 		plt.setp(axs[1].spines.values(),linewidth=2.0)
-		plt.savefig(outdir+'%04d'%time+"CombinedColumn.eps",bbox_inches='tight')
+		plt.savefig(outdir+'%04d'%time+"CombinedColumn",bbox_inches='tight')
 		plt.close(fig)
 		time = time+1
 
 	print('Combined Column Densities Created \n')
 
 	return
+
+def Make_Movie(directory,tstart,tend,convert_pdfs=True):
+    """
+    Function to create movie in mp4 format from set of plots 
+    Parameters
+        directory : string
+            directory where PDF plot outputs present
+        tend : integer
+            last timestep upto which to convert
+        convert_pdfs : Boolean
+            assumes plots are in pdf. This flag converts them to png
+            as ffmpeg does not accept png
+    Returns
+        None
+
+    """
+    # Convert PDFs to PNG
+    directory = os.path.abspath(directory) + '/'
+    if(convert_pdfs is True):
+	    print("Converting eps to png in directory; {}".format(directory))
+	    i = 0
+
+	    for i in tqdm.trange(tstart,tend) : 
+	        filename = directory + "%04dCombinedColumn"%i
+	        filename_png = directory + "%04dCombinedColumn"%(i-tstart)
+	        os.system("convert -density 200 {}.eps".format(filename)+" {}.png".format(filename_png))
+    #Creating Movie
+    print("Creating Movie")
+    os.system("ffmpeg -r 10 -i {}%04dCombinedColumn.png ".format(directory)+ 
+        "-s:v 2560x1440 -vcodec libx264 -y -pix_fmt yuv420p -loglevel error "+
+        "{}animation.mp4".format(directory))
+    print("Deleting png files")
+    os.system("rm {}*.png".format(directory))
+        
+    
 
 if __name__ == "__main__":
 
@@ -98,10 +134,14 @@ if __name__ == "__main__":
 	    help = 'End timestep.')
 	ap.add_argument('-N',action='store',type=int,default=200,
 	    help = 'Resolution')
+	ap.add_argument('-make_movie', action='store_true',
+					help='Flag to make movie from column density.')
 	args = vars(ap.parse_args())
 
 
 	plotColumnDensity(args['directory'],args['tstart'],args['tend'],args['N'],args['outdir'])
+	if(args['make_movie'] is True):
+		Make_Movie(args['directory'],args['tstart'],args['tend'],convert_pdfs=True)
 
 
 
