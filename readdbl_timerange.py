@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import os
+import ReferenceUnits as ref
 
 def readsinglefile(filedirectory,timestep,N,field,code_units=False) : 
 	"""

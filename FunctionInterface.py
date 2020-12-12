@@ -25,10 +25,12 @@ def Compute_min_max(tstart,tend,directory='./',N=200,field='rho'):
         max_data = 1.e-50
         for time in range(tstart,tend+1):
             data = np.abs(read.readsinglefile(directory,time,N,field))
-            min_data = np.min(min_data,np.min(data))
-            max_data = np.max(max_data,np.max(data))
+            min_data = min(min_data,np.min(data))
+            max_data = max(max_data,np.max(data))
 
     else:
+        time = tstart
+        data = np.abs(read.readsinglefile(directory,time,N,field))
         min_data = np.min(data)
         max_data = np.max(data)
 
