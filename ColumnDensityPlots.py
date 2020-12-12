@@ -16,7 +16,7 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	#Compute Column Densities
 	while time <=tend :
-		rho1d    = read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
+		rho1d    = read.readsinglefile(directory,time,N,'rho')
 		iongas1d = read.readsinglefile(directory,time,N,'ionx')
 		mu1d = (iongas1d*0.5+(1.-iongas1d)*1.0)*m
 		no_rho = np.reshape(rho1d/mu1d,(N,N,N))

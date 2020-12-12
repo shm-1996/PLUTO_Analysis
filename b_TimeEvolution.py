@@ -29,15 +29,15 @@ def gaus(x,a,x0,sigma):
 		    return a*np.exp(-(x-x0)**2/(2*sigma**2))*np.exp(x)	
 
 def calculate_b_direct(directory,time,N,Use_temp=False) : 
-	rho1d	= read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
+	rho1d	= read.readsinglefile(directory,time,N,'rho')
 	if(Use_temp is True) :
 		Tgas1d    = read.readsinglefile(directory,time,N,'Tgas')
 		Tgas1d = np.mean(Tgas1d)
 	else :
 		Tgas1d = 10.
-	vx1d    = read.readsinglefile(directory,time,N,'vx1')*ref.unit_Velocity
-	vy1d    = read.readsinglefile(directory,time,N,'vx2')*ref.unit_Velocity
-	vz1d    = read.readsinglefile(directory,time,N,'vx3')*ref.unit_Velocity
+	vx1d    = read.readsinglefile(directory,time,N,'vx1')
+	vy1d    = read.readsinglefile(directory,time,N,'vx2')
+	vz1d    = read.readsinglefile(directory,time,N,'vx3')
 
 	vcom_x = np.average(vx1d,weights = rho1d)
 	vcom_y = np.average(vy1d,weights = rho1d)
@@ -58,12 +58,12 @@ def calculate_b_direct(directory,time,N,Use_temp=False) :
 def calculate_b(directory,time,N) :
 	tbeg = time
 	tend = tbeg 
-	rho1d	= read.readsinglefile(directory,time,N,'rho')*ref.unit_Density
+	rho1d	= read.readsinglefile(directory,time,N,'rho')
 	iongas1d = read.readsinglefile(directory,time,N,'ionx')
 	Tgas1d    = read.readsinglefile(directory,time,N,'Tgas')
-	vx1d    = read.readsinglefile(directory,time,N,'vx1')*ref.unit_Velocity
-	vy1d    = read.readsinglefile(directory,time,N,'vx2')*ref.unit_Velocity
-	vz1d    = read.readsinglefile(directory,time,N,'vx3')*ref.unit_Velocity
+	vx1d    = read.readsinglefile(directory,time,N,'vx1')
+	vy1d    = read.readsinglefile(directory,time,N,'vx2')
+	vz1d    = read.readsinglefile(directory,time,N,'vx3')
 
 	
 
