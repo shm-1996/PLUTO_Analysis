@@ -37,4 +37,40 @@ def Compute_min_max(tstart,tend,directory='./',N=200,field='rho'):
     return min_data,max_data
 
 
+def Make_Movie(directory,basefile='CombinedColumn',tstart=0,tend=100,convert_pdfs=True):
+    """
+    Function to create movie in mp4 format from set of plots 
+    Parameters
+        directory : string
+            directory where PDF plot outputs present
+        basefile: string 
+            Base file name of plots
+        tend : integer
+            last timestep upto which to convert
+        convert_pdfs : Boolean
+            assumes plots are in pdf. This flag converts them to png
+            as ffmpeg does not accept png
+    Returns
+        None
+
+    """
+    # Convert PDFs to PNG
+    directory = os.path.abspath(directory) + '/'
+    if(convert_pdfs is True):
+        print("Converting pdfs to png in directory; {}".format(directory))
+        i = 0
+
+        for i in tqdm.trange(tstart,tend) : 
+            filename = directory + basefile+ "_%04d"%i
+            filename_png = directory + basefile+ "_%04d"%(i-tstart)
+            os.system("convert -density 400 {}.pdf".format(filename)+" {}.png".format(filename_png))
+    #Creating Movie
+    print("Creating Movie")
+    os.system("ffmpeg -r 10 -i {}{}_%04d.png ".format(directory,basefile)+ 
+        "-s:v 2560x1440 -vcodec libx264 -y -pix_fmt yuv420p -loglevel error "+
+        "{}animation.mp4".format(directory))
+    print("Deleting png files")
+    os.system("rm {}*.png".format(directory))
+
+
 

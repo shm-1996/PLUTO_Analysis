@@ -1,4 +1,5 @@
 from header import *
+from FunctionInterface import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.style.use('classic')
@@ -82,41 +83,6 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 	print('Combined Column Densities Created \n')
 
 	return
-
-def Make_Movie(directory,basefile='CombinedColumn',tstart=0,tend=100,convert_pdfs=True):
-    """
-    Function to create movie in mp4 format from set of plots 
-    Parameters
-        directory : string
-            directory where PDF plot outputs present
-        basefile: string 
-        	Base file name of plots
-        tend : integer
-            last timestep upto which to convert
-        convert_pdfs : Boolean
-            assumes plots are in pdf. This flag converts them to png
-            as ffmpeg does not accept png
-    Returns
-        None
-
-    """
-    # Convert PDFs to PNG
-    directory = os.path.abspath(directory) + '/'
-    if(convert_pdfs is True):
-	    print("Converting pdfs to png in directory; {}".format(directory))
-	    i = 0
-
-	    for i in tqdm.trange(tstart,tend) : 
-	        filename = directory + basefile+ "_%04d"%i
-	        filename_png = directory + basefile+ "_%04d"%(i-tstart)
-	        os.system("convert -density 400 {}.pdf".format(filename)+" {}.png".format(filename_png))
-    #Creating Movie
-    print("Creating Movie")
-    os.system("ffmpeg -r 10 -i {}{}_%04d.png ".format(directory,basefile)+ 
-        "-s:v 2560x1440 -vcodec libx264 -y -pix_fmt yuv420p -loglevel error "+
-        "{}animation.mp4".format(directory))
-    print("Deleting png files")
-    os.system("rm {}*.png".format(directory))
         
     
 
