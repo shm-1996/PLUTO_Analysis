@@ -75,7 +75,7 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		cbar.ax.set_xlabel(r"$\log_{10}\mathrm{N}_x\;(\mathrm{cm}^{-2})$",rotation=0,labelpad=5,fontsize=16)
 		plt.setp(axs[0].spines.values(),linewidth=2.0)
 		plt.setp(axs[1].spines.values(),linewidth=2.0)
-		plt.savefig(outdir+'%04d'%time+"CombinedColumn",bbox_inches='tight')
+		plt.savefig(outdir+"CombinedColumn_%04d"%time,bbox_inches='tight')
 		plt.close(fig)
 		time = time+1
 
@@ -83,12 +83,14 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	return
 
-def Make_Movie(directory,tstart,tend,convert_pdfs=True):
+def Make_Movie(directory,basefile='CombinedColumn',tstart=0,tend=100,convert_pdfs=True):
     """
     Function to create movie in mp4 format from set of plots 
     Parameters
         directory : string
             directory where PDF plot outputs present
+        basefile: string 
+        	Base file name of plots
         tend : integer
             last timestep upto which to convert
         convert_pdfs : Boolean
@@ -101,16 +103,16 @@ def Make_Movie(directory,tstart,tend,convert_pdfs=True):
     # Convert PDFs to PNG
     directory = os.path.abspath(directory) + '/'
     if(convert_pdfs is True):
-	    print("Converting eps to png in directory; {}".format(directory))
+	    print("Converting pdfs to png in directory; {}".format(directory))
 	    i = 0
 
 	    for i in tqdm.trange(tstart,tend) : 
-	        filename = directory + "%04dCombinedColumn"%i
-	        filename_png = directory + "%04dCombinedColumn"%(i-tstart)
-	        os.system("convert -density 200 {}.eps".format(filename)+" {}.png".format(filename_png))
+	        filename = directory + basefile+ "_%04d"%i
+	        filename_png = directory + basefile+ "_%04d"%(i-tstart)
+	        os.system("convert -density 400 {}.pdf".format(filename)+" {}.png".format(filename_png))
     #Creating Movie
     print("Creating Movie")
-    os.system("ffmpeg -r 10 -i {}%04dCombinedColumn.png ".format(directory)+ 
+    os.system("ffmpeg -r 10 -i {}{}_%04d.png ".format(directory,basefile)+ 
         "-s:v 2560x1440 -vcodec libx264 -y -pix_fmt yuv420p -loglevel error "+
         "{}animation.mp4".format(directory))
     print("Deleting png files")
