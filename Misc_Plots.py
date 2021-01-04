@@ -1,5 +1,6 @@
 from header import *
 from FunctionInterface import *
+from Power_Spectra import *
 
 def Density_PDF(directory,tstart=100,tend=300,N=200,outdir=None):
     directory = os.path.abspath(directory)
@@ -33,53 +34,20 @@ def Density_PDF(directory,tstart=100,tend=300,N=200,outdir=None):
 
     return
 
+def Initial_Analyses(directory,tstart=100,tend=300,N=200):
 
-def Plot_PowerSpectra(directory,tstart=100,tend=300,N=200):
-    directory = os.path.abspath(directory) + '/'
-    outdir = directory + 'Power_Spectra/'
+    print("Performing initial analyses for this simulation....")
+    print("Density PDF..")
+    Density_PDF(directory,tstart,tend,N)
 
-    for time in range(tstart,tend):
-        file = np.loadtxt(outdir+'_spect_vels%04d.dat'%time,skiprows=5)
-        k = file[:,1]
-        P_k = file[:,15]
-        P_long = file[:,11]
-        P_trv = file[:,13]
+    print("Column Density...")
+    plotColumnDensity(directory,tstart,tend,N)
 
-        fig,axs = plt.subplots(ncols=1)
-        axs.plot(k,P_k,'x-',lw=2.0,label='Total')
-        axs.plot(k,P_trv,'x-',lw=2.0,label='Transverse')
-        axs.plot(k,P_long,'x-',lw=2.0,label='Longitudinal')
-        axs.set_xlabel(r'$k$')
-        axs.set_ylabel(r'$P(k)$')
-        axs.set_xscale('log')
-        axs.set_yscale('log')
-        axs.legend(loc='best')
-        plt.savefig(outdir+'Vels_%04d'%time,bbox_inches='tight')
-        plt.clf()
-        plt.close()
+    print("Making Movie")
+    Make_Movie(directory,tstart,tend,convert_pdfs=True)
 
-        file = np.loadtxt(outdir+'_spect_rhoweightedv%04d.dat'%time,skiprows=5)
-        k = file[:,1]
-        P_k = file[:,15]
-        P_long = file[:,11]
-        P_trv = file[:,13]
+    print("Power spectra..")
+    Compute_Power_Spectra(directory,tstart,tend,N)
 
-        fig,axs = plt.subplots(ncols=1)
-        axs.plot(k,P_k,'x-',lw=2.0,label='Total')
-        axs.plot(k,P_trv,'x-',lw=2.0,label='Transverse')
-        axs.plot(k,P_long,'x-',lw=2.0,label='Longitudinal')
-        axs.set_xlabel(r'$k$')
-        axs.set_ylabel(r'$P(k)$')
-        axs.set_xscale('log')
-        axs.set_yscale('log')
-        axs.legend(loc='best')
-        plt.savefig(outdir+'RhoV_%04d'%time,bbox_inches='tight')
-        plt.clf()
-        plt.close()
-
-
-    
-    
-
-    
-
+    print("Plotting Power spectra..")
+    Plot_PowerSpectra(directory,tstart, tend, N)
