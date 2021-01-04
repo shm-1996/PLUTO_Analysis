@@ -2,6 +2,7 @@ from header import *
 from FunctionInterface import *
 from Misc_Plots import * 
 import subprocess
+import socket
 
 def Compute_PowerSpectra(directory,tstart=100,tend=300,N=200,outdir=None,plot=True):
     """
@@ -20,8 +21,14 @@ def Compute_PowerSpectra(directory,tstart=100,tend=300,N=200,outdir=None,plot=Tr
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    #Compile Power spectra code 
-    subprocess.run(["mpic++ -o pow powspectrum.cpp -lm -lfftw3_mpi -lfftw3"],shell=True)
+    #Compile Power spectra code
+
+
+    if(socket.gethostname().split('-')[0] == 'gadi'):
+        #Specific to gadi
+        subprocess.run(["mpiCC -o pow powspectrum.cpp -lm -lfftw3_mpi -lfftw3"],shell=True)     
+    else:
+        subprocess.run(["mpic++ -o pow powspectrum.cpp -lm -lfftw3_mpi -lfftw3"],shell=True)
 
     for time in range(tstart,tend+1):
         subprocess.run(["./pow {} {} {} {} {}".format(directory,time,N,N,N)],shell=True)
