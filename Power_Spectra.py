@@ -93,7 +93,7 @@ if __name__ == "__main__":
                     help='Flag to plot power spectra.')
     args = vars(ap.parse_args())
 
-    #Compute_PowerSpectra(args['directory'],args['tstart'],args['tend'],args['N'])
+    Compute_PowerSpectra(args['directory'],args['tstart'],args['tend'],args['N'])
     if(args['plot'] is True):
         print("Plotting...")
         Plot_PowerSpectra(args['directory'],args['tstart'],args['tend'],args['N'])
