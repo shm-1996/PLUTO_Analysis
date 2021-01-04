@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
 	
 	
 
-	cout<<"Looking for files in directory:"<<inputfile<<"With dimensions :  "<<N[X]<<", "<<N[Y]<<", "<<N[Z];
+	cout<<"Looking for files in directory:"<<inputfiledirectory<<"With dimensions :  "<<N[X]<<", "<<N[Y]<<", "<<N[Z]<<endl;
 	/// get the dataset dimensions
 	//vector<int> N = GetDimensions(inputfile, "velx");
 	
@@ -128,7 +128,6 @@ int main(int argc, char * argv[])
 	if (MyPE==0) cout<<"start reading data from disk..."<<endl;
 	inputfile = inputfiledirectory+"rho."+fileno.str()+".dbl";
 	ReadData(inputfile, dens, N); if (MyPE==0) cout<<"dens read."<<endl;
-	cout<<dens[0]<<dens[1]<<endl;
 	inputfile = inputfiledirectory+"vx1."+fileno.str()+".dbl";
 	ReadData(inputfile,velx, N); if (MyPE==0) cout<<"velx read."<<endl;
 	inputfile = inputfiledirectory+"vx2."+fileno.str()+".dbl";
