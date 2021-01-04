@@ -169,7 +169,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("vels", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, true); // decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_vels"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_vels"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 	/*
@@ -177,7 +177,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("rho3", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, true); // decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_rho3"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_rho3"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
@@ -185,7 +185,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("rhov", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, true); // decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_rhov"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_rhov"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
@@ -193,7 +193,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("varrho", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, false); // no decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_varrho"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_varrho"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
@@ -201,7 +201,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("varlnrho", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, false); // no decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_varlnrho"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_varlnrho"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
@@ -210,7 +210,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("rho", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, false); // no decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_rho"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_rho"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
@@ -218,7 +218,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("lnrho", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, false); // no decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_lnrho"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_lnrho"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
@@ -228,7 +228,7 @@ int main(int argc, char * argv[])
 	AssignDataToFFTWContainer("rhoweightedv", N, ntot_local, dens, velx, vely, velz);	
 	ComputeSpectrum(N, MyInds, true); // no decomposition
 	if (MyPE==0) {
-		outfilename = inputfiledirectory+"powspectrum/_spect_rhoweightedv"+fileno.str()+".dat";
+		outfilename = inputfiledirectory+"Power_Spectra/_spect_rhoweightedv"+fileno.str()+".dat";
 		WriteOutAnalysedData(outfilename);
 	}
 
