@@ -3,7 +3,6 @@ from FunctionInterface import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.style.use('classic')
-import tqdm
 def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	directory = os.path.abspath(directory)
@@ -33,7 +32,7 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 	if(outdir is None):
 		outdir = directory + '/Analysis/Column_Density/'
 	else:
-		outdir = os.path.abspath(outdir)
+		outdir = os.path.abspath(outdir)+'/'
 
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
@@ -86,7 +85,7 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		cbar.ax.set_xlabel(r"$\log_{10}\mathrm{N}_x\;(\mathrm{cm}^{-2})$",rotation=0,labelpad=5,fontsize=16)
 		plt.setp(axs[0].spines.values(),linewidth=2.0)
 		plt.setp(axs[1].spines.values(),linewidth=2.0)
-		plt.savefig(outdir+"CombinedColumn_%04d"%time,bbox_inches='tight')
+		plt.savefig(outdir+"CombinedColumn_%04d.pdf"%time,bbox_inches='tight')
 		plt.close(fig)
 		time = time+1
 
@@ -116,10 +115,18 @@ if __name__ == "__main__":
 					help='Flag to make movie from column density.')
 	args = vars(ap.parse_args())
 
+	if(args['outdir'] is None):
+		outdir = args['directory'] + '/Analysis/Column_Density/'
+	else:
+		outdir = os.path.abspath(args['outdir']) +'/'
 
-	plotColumnDensity(args['directory'],args['tstart'],args['tend'],args['N'],args['outdir'])
+	if not os.path.exists(outdir):
+		os.makedirs(outdir)
+
+	plotColumnDensity(args['directory'],args['tstart'],args['tend'],args['N'],outdir=outdir)
 	if(args['make_movie'] is True):
-		Make_Movie(args['directory'],args['tstart'],args['tend'],convert_pdfs=True)
+		Make_Movie(outdir,basefile='CombinedColumn',tstart=args['tstart'],
+			tend=args['tend'],convert_pdfs=True)
 
 
 

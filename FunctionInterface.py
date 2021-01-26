@@ -59,10 +59,9 @@ def Make_Movie(directory,basefile='CombinedColumn',tstart=0,tend=100,convert_pdf
     if(convert_pdfs is True):
         print("Converting pdfs to png in directory; {}".format(directory))
         i = 0
-
-        for i in tqdm.trange(tstart,tend) : 
-            filename = directory + basefile+ "_%04d"%i
-            filename_png = directory + basefile+ "_%04d"%(i-tstart)
+        for i in tqdm.trange(tstart,tend+1) : 
+            filename = directory + basefile+ "_{:04d}".format(i)
+            filename_png = directory + basefile+ "_{:04d}".format(i-tstart)
             os.system("convert -density 400 {}.pdf".format(filename)+" {}.png".format(filename_png))
     #Creating Movie
     print("Creating Movie")
