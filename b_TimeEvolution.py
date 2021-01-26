@@ -461,7 +461,7 @@ if __name__ == "__main__":
 			text_columns = np.column_stack((time_column,Sigma_s,Error_s,Mach_No,b,Error_b))
 			np.savetxt(output+'b_timevariation.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)	
 	
-	plot_quantities(tfinish-tstart,Sigma_s,Mach_No,b,save=True,outdir=directory)
+	plot_quantities(tfinish-tstart,Sigma_s,Mach_No,b,save=True,outdir=output)
 
 	print('Time Variation of b Calculated\n\n')	
 
