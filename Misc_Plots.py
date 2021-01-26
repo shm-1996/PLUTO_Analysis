@@ -5,7 +5,7 @@ from Power_Spectra import *
 fields = np.array(['rho','vx1','vx2','vx3','prs','Tgas','ionx','iony','ueuv','urec',
             'fun','bx1','bx2','bx3','phi'])
 
-labels = np.array(['$\\rho$',r'$v_{\mathrm{x}}$',r'$v_{\mathrm{y}}$',r'$v_{\mathrm{z}}$',
+labels = np.array([r'$\rho$',r'$v_{\mathrm{x}}$',r'$v_{\mathrm{y}}$',r'$v_{\mathrm{z}}$',
 r'$P_{\mathrm{th}}$',r'$T$',r'$x_{\mathrm{ion}}$',r'$y_{\mathrm{ion}}$',r'$u_{\mathrm{EUV}}$',
 r'$u_{\mathrm{REC}}$','fun',r'$B_{\mathrm{x}}$',r'$B_{\mathrm{y}}$',r'$B_{\mathrm{z}}$',
 r'$\phi$'])
@@ -67,7 +67,6 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
     label_plot = labels[index][0]
     if(log):
         label_plot = r"$\log_{10} \,$" +"{}".format(labels[index][0])
-        print(label_plot)
 
     for time in range(tstart,tend+1):
         data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
