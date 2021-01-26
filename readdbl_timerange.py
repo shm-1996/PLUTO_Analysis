@@ -109,7 +109,7 @@ def readtimerange(filedirectory,field,N=200,tbeg=100,tend=100) :
 	i=tbeg
 	data = np.zeros((tend-tbeg+1,N*N*N))
 	while i<=tend:
-		data[i-tbeg] = readsinglefile(filedirectory,timestep=tbeg+i,field=field,N=N)
+		data[i-tbeg] = readsinglefile(filedirectory,timestep=i,field=field,N=N)
 		i = i+1
 
 	print("Reading done")
