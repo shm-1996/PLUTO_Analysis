@@ -31,12 +31,16 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 	min_columndens_x = np.min(np.log10(columndens_z))
 
 	if(outdir is None):
-		outdir = directory + '/Column_Density/'
+		outdir = directory + '/Analysis/Column_Density/'
 	else:
 		outdir = os.path.abspath(outdir)
 
 	if not os.path.exists(outdir):
 		os.makedirs(outdir)
+
+	#Store Column Density as pickle file
+	saveObj(columndens_z,outdir+'Column_z')
+	saveObj(columndens_x,outdir+'Column_x')
 
 	time = tstart
 
@@ -44,7 +48,8 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 	while time <=tend :
 		fig,axs = plt.subplots(ncols= 2,figsize=(14,12))
 		fig.subplots_adjust(wspace=0.02)
-		im = axs[0].imshow(np.log10(columndens_z[time-tstart]),extent=[0,4,0,4],cmap='Spectral_r',origin='lower',vmin=min_columndens_z,vmax=max_columndens_z)
+		im = axs[0].imshow(np.log10(columndens_z[time-tstart]),extent=[0,4,0,4],cmap='Spectral_r',
+			origin='lower',vmin=min_columndens_z,vmax=max_columndens_z)
 		axs[0].set_xticks([0.5,1.5,2.5,3.5])
 		axs[0].set_yticks([0.5,1.5,2.5,3.5])
 		axs[0].tick_params(which='major',width=1.5,length=4)
@@ -52,14 +57,17 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		axs[0].set_xlabel(r'$x\;$(pc)',labelpad=0.03)
 		axs[0].set_ylabel(r'$y\;$(pc)',labelpad=0.03)
 		time_sim = (time-tstart)*10
-		axs[0].annotate(r"$\mathbf{t} = \bf{%d}\;\mathrm{\mathbf{Kyr}}$"%time_sim,(0.2,3.7),color='#3E403D',fontsize=12,weight='black',alpha=0.8)
+		axs[0].annotate(r"$\mathbf{t} = \bf{%d}\;\mathrm{\mathbf{Kyr}}$"%time_sim,(0.2,3.7),
+			color='#3E403D',fontsize=12,weight='black',alpha=0.8)
 		#cax = fig.add_axes([0.12,0.02,0.02,0.2])
-		cbar = fig.colorbar(im,ax = axs[0],shrink=1.0,use_gridspec=True,orientation='horizontal',pad=0.05)
+		cbar = fig.colorbar(im,ax = axs[0],shrink=1.0,use_gridspec=True,orientation='horizontal',
+			pad=0.05)
 		cbar.outline.set_linewidth(2)
 		cbar.ax.tick_params(which='major',width=1.5,length=4)
 		cbar.ax.set_xlabel(r"$\log_{10}\mathrm{N}_z\;(\mathrm{cm}^{-2})$",rotation=0,labelpad=5,fontsize=16)
 
-		im = axs[1].imshow(np.transpose(np.log10(columndens_x[time-tstart])),extent=[0,4,0,4],cmap='Spectral_r',origin='lower',vmin=min_columndens_x,vmax=max_columndens_x)
+		im = axs[1].imshow(np.transpose(np.log10(columndens_x[time-tstart])),extent=[0,4,0,4],
+			cmap='Spectral_r',origin='lower',vmin=min_columndens_x,vmax=max_columndens_x)
 		axs[1].set_xticks([0.5,1.5,2.5,3.5])
 		axs[1].set_yticks([0.5,1.5,2.5,3.5])
 		axs[1].set_yticklabels([])
@@ -68,9 +76,11 @@ def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 		axs[1].set_xlabel(r'$z\;$(pc)',labelpad=0.03)
 		axs[1].set_xlabel(r'$z\;$(pc)')
 		time_sim = (time-tstart)*10
-		axs[1].annotate(r"$\mathbf{t} = \bf{%d}\;\mathrm{\mathbf{Kyr}}$"%time_sim,(0.2,3.7),color='#3E403D',fontsize=12,weight='black',alpha=0.8)
+		axs[1].annotate(r"$\mathbf{t} = \bf{%d}\;\mathrm{\mathbf{Kyr}}$"%time_sim,
+			(0.2,3.7),color='#3E403D',fontsize=12,weight='black',alpha=0.8)
 
-		cbar = fig.colorbar(im,ax = axs[1],shrink=1.0,use_gridspec=True,orientation='horizontal',pad=0.05)
+		cbar = fig.colorbar(im,ax = axs[1],shrink=1.0,use_gridspec=True,
+			orientation='horizontal',pad=0.05)
 		cbar.outline.set_linewidth(2)
 		cbar.ax.tick_params(which='major',width=1.5,length=4)
 		cbar.ax.set_xlabel(r"$\log_{10}\mathrm{N}_x\;(\mathrm{cm}^{-2})$",rotation=0,labelpad=5,fontsize=16)
