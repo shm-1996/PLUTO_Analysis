@@ -54,4 +54,4 @@ if __name__ == '__main__':
 		sys.exit()
 	print("Creating restart appropriate dbl files for a {}^3 resolution simulation in {}".format(args['N'],args['directory']))
 	directory = os.path.abspath(args['directory']) + '/'
-	create_files(args['directory'],args['N'],args['time'])
+	create_files(directory,args['N'],args['time'])
