@@ -113,9 +113,6 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
         data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
         #Central slice
         data = data[int(N/2)+1]
-        
-        #Convert to cgs units
-        data = data*unit_plot
 
         fig,axs = plt.subplots(ncols=1)
         if(log):
