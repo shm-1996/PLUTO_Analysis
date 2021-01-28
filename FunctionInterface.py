@@ -1,6 +1,6 @@
 from header import *
 
-def Compute_min_max(tstart,tend,directory='./',N=200,field='rho'):
+def Compute_min_max(tstart,tend,directory='./',N=200,field='rho',slice_index=None):
     """
     Routine to compute min/max of data
         tstart: integer 
@@ -13,11 +13,17 @@ def Compute_min_max(tstart,tend,directory='./',N=200,field='rho'):
             Resolution
         field: string
             Data field to read in
+        slice_index : integer
+            Optional argument to compute min max in a slice of the box
         
     """
     directory = os.path.abspath(directory)
     if(tend<tstart):
         raise ValueError("tend has to be greater than tstart")
+
+    if(slice_index == -1):
+        slice_index = int(N/2.)+1
+
     
     if(tend>tstart):
     #Compute min and max density
@@ -25,12 +31,16 @@ def Compute_min_max(tstart,tend,directory='./',N=200,field='rho'):
         max_data = 1.e-50
         for time in range(tstart,tend+1):
             data = np.abs(read.readsinglefile(directory,time,N,field))
+            if(slice_index):
+                data = data[slice_index]            
             min_data = min(min_data,np.min(data))
             max_data = max(max_data,np.max(data))
 
     else:
         time = tstart
         data = np.abs(read.readsinglefile(directory,time,N,field))
+        if(slice_index):
+            data = data[slice_index] 
         min_data = np.min(data)
         max_data = np.max(data)
 

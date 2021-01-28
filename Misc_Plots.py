@@ -43,7 +43,29 @@ def Density_PDF(directory,tstart=100,tend=300,N=200,outdir=None):
     return
 
 
-def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=True):
+def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=True,
+    slice_index=-1):
+
+    """
+    Routine to plot slice plots of a field in a time range
+        directory : string
+            directory where files reside
+        field: string
+            Data field to read in
+        tstart: integer 
+            directory in which files reside
+        tend : integer 
+            timestep of file        
+        N : integer
+            Resolution
+        outdir : string 
+            Location to store the files.
+        log : boolean
+            Flag to use logscale in plots. True by default. 
+        slice_index : integer
+            Optional argument to compute min max in a slice of the box
+        
+    """
 
     directory = os.path.abspath(directory)
     m = constant.mH_HydrogenMass
@@ -58,13 +80,16 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    min_data,max_data = Compute_min_max(tstart,tend,directory,N,field)
+    min_data,max_data = Compute_min_max(tstart,tend,directory,N,field,
+        slice_index=slice_index)
     if(log):
         min_data = np.log10(min_data)
         max_data = np.log10(max_data)
 
     index = np.where(fields==field)[0]
     label_plot = labels[index][0]
+    if(slice_index == -1):
+        slice_index = int(N/2)+1
     if(log):
         label_plot = r"$\log_{10} \,$" +"{}".format(labels[index][0])
 
