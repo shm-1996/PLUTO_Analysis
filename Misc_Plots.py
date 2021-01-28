@@ -14,13 +14,11 @@ unit_string = np.array([r'$\mathrm{g}\,\mathrm{cm}^{-3}$',r'$\mathrm{km}\,\mathr
     r'$\mathrm{km}\,\mathrm{s}^{-1}$',r'$\mathrm{km}\,\mathrm{s}^{-1}$',
 r'$\mathrm{erg} \, \mathrm{cm}^{-3}$',r'$\mathrm{K}$','','',
 r'$\mathrm{photons} \, \mathrm{cm}^{-3}$',r'$\mathrm{photons} \, \mathrm{cm}^{-3}$',
-'',r'$\mathrm{G}$',r'$\mathrm{G}$',r'$\mathrm{G}$',
+'',r'$\mu \mathrm{G}$',r'$\mu \mathrm{G}$',r'$\mu \mathrm{G}$',
 r'$\mathrm{erg} \, \mathrm{cm}^{-3}$'])
 
-units = np.array([ref.unit_Density,ref.unit_Velocity*1.e-5,ref.unit_Velocity*1.e-5,
-    ref.unit_Velocity*1.e-5,ref.unit_Pressure,ref.unit_Temperature,1.0,1.0,
-    ref.unit_Volume**(-1),ref.unit_Volume**(-1),1.0,ref.unit_MagneticField,
-    ref.unit_MagneticField,ref.unit_MagneticField,ref.unit_GravPotential])
+unit_factor = np.array([1.0,1.e-5,1.e-5,1.e-5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,
+    1.e-6,1.e-6,1.e-6])
 
 def Density_PDF(directory,tstart=100,tend=300,N=200,outdir=None):
     directory = os.path.abspath(directory)
@@ -100,20 +98,22 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
 
     index = np.where(fields==field)[0]
     label_plot = labels[index][0]
-    unit_plot = units[index][0]
+    unit_plot = unit_factor[index][0]
     if(slice_index == -1):
         slice_index = int(N/2)+1
+    label_plot = "{}".format(labels[index][0])
     if(log):
         label_plot = r"$\log_{10} \,$" +"{}".format(labels[index][0])
 
     #Add unit string
-    label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0]) 
+    if(unit_string[index][0] not == '')
+        label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
 
     for time in range(tstart,tend+1):
         data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
         #Central slice
         data = data[int(N/2)+1]
-
+        data = data*unit_plot
         fig,axs = plt.subplots(ncols=1)
         if(log):
             im = axs.imshow(np.log10(data),vmin=min_data,vmax=max_data,extent=[0,4,0,4],
