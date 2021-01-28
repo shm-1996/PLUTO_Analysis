@@ -106,7 +106,9 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
         label_plot = r"$\log_{10} \,$" +"{}".format(labels[index][0])
 
     #Add unit string
-    if(unit_string[index][0] != '')
+    if(unit_string[index][0] == '')
+        pass
+    else:
         label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
 
     for time in range(tstart,tend+1):
@@ -130,9 +132,8 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
             color='#3E403D',fontsize=12,weight='black',alpha=0.8)
         cbar = fig.colorbar(im,ax = axs,shrink=1.0,use_gridspec=True,
                         orientation='vertical',pad=0.02)
-        if(log):
-            cbar.ax.set_ylabel(label_plot,rotation=90,
-                       labelpad=5,fontsize=16)
+        cbar.ax.set_ylabel(label_plot,rotation=90,
+                   labelpad=5,fontsize=16)
         plt.savefig(outdir+'{}_{:04d}'.format(field,time),bbox_inches='tight')
         plt.clf()
         plt.close(fig)
