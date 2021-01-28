@@ -106,7 +106,7 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
         label_plot = r"$\log_{10} \,$" +"{}".format(labels[index][0])
 
     #Add unit string
-    if(unit_string[index][0] not == '')
+    if(unit_string[index][0] != '')
         label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
 
     for time in range(tstart,tend+1):
