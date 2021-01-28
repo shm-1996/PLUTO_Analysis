@@ -12,7 +12,7 @@ r'$\phi$'])
 
 unit_string = np.array([r'$\mathrm{g}\,\mathrm{cm}^{-3}$',r'$\mathrm{km}\,\mathrm{s}^{-1}$',
     r'$\mathrm{km}\,\mathrm{s}^{-1}$',r'$\mathrm{km}\,\mathrm{s}^{-1}$',
-r'$\mathrm{erg} \, \mathrm{cm}^{-3}$',r'$\mathrm{K}$','','',
+r'$\mathrm{erg} \, \mathrm{cm}^{-3}$',r'$\mathrm{K}$',None,None,
 r'$\mathrm{photons} \, \mathrm{cm}^{-3}$',r'$\mathrm{photons} \, \mathrm{cm}^{-3}$',
 '',r'$\mu \mathrm{G}$',r'$\mu \mathrm{G}$',r'$\mu \mathrm{G}$',
 r'$\mathrm{erg} \, \mathrm{cm}^{-3}$'])
@@ -106,9 +106,7 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
         label_plot = r"$\log_{10} \,$" +"{}".format(labels[index][0])
 
     #Add unit string
-    if(unit_string[index][0] == '')
-        pass
-    else:
+    if(unit_string[index][0]):
         label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
 
     for time in range(tstart,tend+1):
