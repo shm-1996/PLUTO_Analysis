@@ -453,7 +453,7 @@ if __name__ == "__main__":
 			text_columns = np.column_stack((time_column,Sigma_s,Error_s,Mach_No,ERROR_M,b,Error_b))
 			np.savetxt(output+'b_timevariation_LognormalM.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)
 		elif(args['direct'] is True) :
-			header = '1. Time(Kyr) \t sigma_s \t Error_s \t Mach No \t b \t error_b \n\n'
+			header = '1. Time(Kyr) \t sigma_s \t Mach No \t b \n\n'
 			text_columns = np.column_stack((time_column,Sigma_s,Mach_No,b))
 			np.savetxt(output+'b_direct.dat',text_columns,fmt='%0.2f',delimiter='\t',header=header)
 		else:
