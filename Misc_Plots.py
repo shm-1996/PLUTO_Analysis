@@ -184,18 +184,19 @@ def Volume_Averaged(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,
     weighted_sum = 0.0
     sum_weights = 0.0
     average = np.zeros(tend-tstart+1)
-    dV = (4.0*constant.Parsec/(N))**3
+    dVol = (4.0*constant.Parsec/(N))**3
 
     for time in range(tstart,tend+1):
         data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
+        dV = np.full_like(data,dVol)
         data = data*unit_plot
         if(mass_weighted):
             rho = read.readsinglefile(directory,time,N,'rho').reshape(N,N,N)
-            weighted_sum += np.sum(data*dV*rho)
-            sum_weights += np.sum(dV*rho)
+            weighted_sum = np.sum(data*dV*rho)
+            sum_weights = np.sum(dV*rho)
         else:
-            weighted_sum += np.sum(data*dV)
-            sum_weights += np.sum(dV)
+            weighted_sum = np.sum(data*dV)
+            sum_weights = np.sum(dV)
 
         average[time-tstart] = weighted_sum/sum_weights
 
@@ -203,7 +204,7 @@ def Volume_Averaged(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,
     #Plot time evolution
     fig,axs = plt.subplots(ncols=1)
     time = np.arange(tstart*10.0,(tend+1)*10.0,10.0)
-    axs.plot(time,average,'x-')
+    axs.plot(time,average,'x-',ms=3.0)
     axs.set_xlabel(r'$t \, \mathrm{kyr}$')
     axs.set_ylabel(label_plot)
     plt.savefig(outdir+'{}_volavg'.format(field),bbox_inches='tight')
