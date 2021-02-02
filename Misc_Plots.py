@@ -190,7 +190,7 @@ def Volume_Averaged(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,
     fig,axs = plt.subplots(ncols=1)
     time = np.arange(tstart*10.0,(tend+1)*10.0,10.0)
     axs.plot(time,average,'x-',ms=3.0)
-    axs.set_xlabel(r'$t \, \mathrm{kyr}$')
+    axs.set_xlabel(r'$t \, (\mathrm{kyr})$')
     axs.set_ylabel(label_plot)
     if(mass_weighted):
         plt.savefig(outdir+'{}_mavg'.format(field),bbox_inches='tight')
@@ -243,7 +243,7 @@ def Compare_Averages(nsims=2,directory_list=None,field='rho',tstart=100,tend=300
     time = np.arange(tstart*10.0,(tend+1)*10.0,10.0)
     for i in range(0,nsims):
         axs.plot(time,averages_arr[i],'x-',ms=3.0,label=labels_list[i],color=colors_list[i])
-    axs.set_xlabel(r'$t \, \mathrm{kyr}$')
+    axs.set_xlabel(r'$t \, (\mathrm{kyr})$')
     axs.set_ylabel(label_plot)
     axs.legend(loc='best')
     if(mass_weighted):
