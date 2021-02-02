@@ -138,6 +138,79 @@ def Slice_Plot(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,log=T
 
     return
 
+def Volume_Averaged(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,mass_weighted=False) :
+    """
+    Routine to plot time evolution of volume averaged field
+        directory : string
+            directory where files reside
+        field: string
+            Data field to read in
+        tstart: integer 
+            directory in which files reside
+        tend : integer 
+            timestep of file        
+        N : integer
+            Resolution
+        outdir : string 
+            Location to store the files.    
+        mass_weighted: Boolean
+            Flag to set mass weighted averaging    
+        
+    """
+
+    directory = os.path.abspath(directory)
+    m = constant.mH_HydrogenMass
+    k_boltzmann=constant.k_BoltzmannConstant
+    time = tstart
+
+    if(outdir is None):
+        outdir = directory  +'/Analysis/'
+    else:
+        outdir = os.path.abspath(outdir) + '/'
+
+    index = np.where(fields==field)[0]
+    label_plot = labels[index][0]
+    unit_plot = unit_factor[index][0]
+    
+    if(mass_weighted):
+        label_plot = r"$<\,$" +"{}".format(labels[index][0]) + r"$>_M$"
+    else:
+        label_plot = r"$<\,$" +"{}".format(labels[index][0]) + r"$>_V$"
+
+    #Add unit string
+    if(unit_string[index][0]):
+        label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
+
+    weighted_sum = 0.0
+    sum_weights = 0.0
+    average = np.zeros(tend-tstart+1)
+    dV = (4.0*constant.Parsec/(N))**3
+
+    for time in range(tstart,tend+1):
+        data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
+        data = data*unit_plot
+        if(mass_weighted):
+            rho = read.readsinglefile(directory,time,N,'rho').reshape(N,N,N)
+            weighted_sum += np.sum(data*dV*rho)
+            sum_weights += np.sum(dV*rho)
+        else:
+            weighted_sum += np.sum(data*dV)
+            sum_weights += np.sum(dV)
+
+        average[time-tstart] = weighted_sum/sum_weights
+
+
+    #Plot time evolution
+    fig,axs = plt.subplots(ncols=1)
+    time = np.arange(tstart*10.0,(tend+1)*10.0,10.0)
+    axs.plot(time,average,'x-')
+    axs.set_xlabel(r'$t \, \mathrm{kyr}$')
+    axs.set_ylabel(label_plot)
+    plt.savefig(outdir+'{}_volavg'.format(field),bbox_inches='tight')
+    plt.clf()
+    plt.close(fig)
+    return
+
 
 def Initial_Analyses(directory,tstart=100,tend=300,N=200):
 
