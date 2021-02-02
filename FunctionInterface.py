@@ -49,6 +49,32 @@ def Compute_min_max(tstart,tend,directory='./',N=200,field='rho',slice_index=Non
     return min_data,max_data
 
 
+def return_Volavg(directory,tstart,tend,field='rho',N=200,mass_weighted=False):
+    directory = os.path.abspath(directory)
+    time = tstart
+
+    weighted_sum = 0.0
+    sum_weights = 0.0
+    average = np.zeros(tend-tstart+1)
+    dVol = (4.0*constant.Parsec/(N))**3
+
+    for time in range(tstart,tend+1):
+        data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
+        dV = np.full_like(data,dVol)
+        data = data
+        if(mass_weighted):
+            rho = read.readsinglefile(directory,time,N,'rho').reshape(N,N,N)
+            weighted_sum = np.sum(data*dV*rho)
+            sum_weights = np.sum(dV*rho)
+        else:
+            weighted_sum = np.sum(data*dV)
+            sum_weights = np.sum(dV)
+
+        average[time-tstart] = weighted_sum/sum_weights
+
+    return average
+
+
 def Make_Movie(directory,basefile='CombinedColumn',tstart=0,tend=100,convert_pdfs=True):
     """
     Function to create movie in mp4 format from set of plots 

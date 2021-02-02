@@ -181,24 +181,7 @@ def Volume_Averaged(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,
     if(unit_string[index][0]):
         label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
 
-    weighted_sum = 0.0
-    sum_weights = 0.0
-    average = np.zeros(tend-tstart+1)
-    dVol = (4.0*constant.Parsec/(N))**3
-
-    for time in range(tstart,tend+1):
-        data = read.readsinglefile(directory,time,N,field).reshape(N,N,N)
-        dV = np.full_like(data,dVol)
-        data = data*unit_plot
-        if(mass_weighted):
-            rho = read.readsinglefile(directory,time,N,'rho').reshape(N,N,N)
-            weighted_sum = np.sum(data*dV*rho)
-            sum_weights = np.sum(dV*rho)
-        else:
-            weighted_sum = np.sum(data*dV)
-            sum_weights = np.sum(dV)
-
-        average[time-tstart] = weighted_sum/sum_weights
+    average = return_Volavg(directory,tstart,tend,field,N,mass_weighted)*unit_plot
 
 
     #Plot time evolution
