@@ -20,6 +20,8 @@ r'$\mathrm{erg} \, \mathrm{cm}^{-3}$'])
 unit_factor = np.array([1.0,1.e-5,1.e-5,1.e-5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,
     1.e-6,1.e-6,1.e-6])
 
+colors_list = ['#7616F5','#FA3C51','#FAD200','#F900E8','#00D55D','#A17C1A']
+
 def Density_PDF(directory,tstart=100,tend=300,N=200,outdir=None):
     directory = os.path.abspath(directory)
     m = constant.mH_HydrogenMass
@@ -190,10 +192,69 @@ def Volume_Averaged(directory,field='rho',tstart=100,tend=300,N=200,outdir=None,
     axs.plot(time,average,'x-',ms=3.0)
     axs.set_xlabel(r'$t \, \mathrm{kyr}$')
     axs.set_ylabel(label_plot)
-    plt.savefig(outdir+'{}_volavg'.format(field),bbox_inches='tight')
+    if(mass_weighted):
+        plt.savefig(outdir+'{}_mavg'.format(field),bbox_inches='tight')
+    else:    
+        plt.savefig(outdir+'{}_volavg'.format(field),bbox_inches='tight')
     plt.clf()
     plt.close(fig)
     return
+
+
+def Compare_Averages(nsims=2,directory_list=None,field='rho',tstart=100,tend=300,N=200,outdir=None,mass_weighted=False,
+    labels_list=None):
+    
+    if(len(directory_list) != nsims):
+        raise ValueError("No of directories provided in list does not match nsims")
+    if(labels_list is None):
+        labels_list = np.arange(1,nsims+1,1)
+        labels_list = list(map(str,labels_list))
+    else:
+        if(len(labels_list) != nsims):
+            raise ValueError("No of directories provided in list does not match nsims")
+
+    if(outdir is None):
+        outdir = directory  +'/Analysis/'
+    else:
+        outdir = os.path.abspath(outdir) + '/'
+
+    index = np.where(fields==field)[0]
+    label_plot = labels[index][0]
+    unit_plot = unit_factor[index][0]
+    
+    if(mass_weighted):
+        label_plot = r"$<\,$" +"{}".format(labels[index][0]) + r"$>_M$"
+    else:
+        label_plot = r"$<\,$" +"{}".format(labels[index][0]) + r"$>_V$"
+
+    #Add unit string
+    if(unit_string[index][0]):
+        label_plot = label_plot + r'$\;$' + '({})'.format(unit_string[index][0])
+
+    averages_arr = np.zeros((nsims,tend-tstart+1))
+
+    for i in range(0,nsims):
+        directory = directory_list[i]
+        directory = os.path.abspath(directory) + '/'
+        averages_arr[i] = return_Volavg(directory,tstart,tend,field,N,mass_weighted)*unit_plot
+
+    #Plot averages
+    fig,axs = plt.subplots(ncols=1)
+    time = np.arange(tstart*10.0,(tend+1)*10.0,10.0)
+    for i in range(0,nsims):
+        axs.plot(time,averages_arr[i],'x-',ms=3.0,label=labels_list[i],color=colors_list[i])
+    axs.set_xlabel(r'$t \, \mathrm{kyr}$')
+    axs.set_ylabel(label_plot)
+    axs.legend(loc='best')
+    if(mass_weighted):
+        plt.savefig(outdir+'{}_mavg'.format(field),bbox_inches='tight')
+    else:    
+        plt.savefig(outdir+'{}_volavg'.format(field),bbox_inches='tight')
+    plt.clf()
+    plt.close(fig)
+    return
+
+
 
 
 def Initial_Analyses(directory,tstart=100,tend=300,N=200):
