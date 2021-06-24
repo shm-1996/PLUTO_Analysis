@@ -29,13 +29,13 @@ def CompareSeeds(basedirectory='./',field='rho',tstart=0,tend=100,N=200,
         
     """
 
-    basedirectory = os.path.abspath(basedirectory)
+    basedirectory = os.path.abspath(basedirectory)+'/'
 
     if(tend>tstart and show is True):
         raise ValueError("The 'show' argument can only be used if tstart=tend.")
 
     if(outdir is None):
-        outdir = directory + '/Compare_Seeds/'
+        outdir = basedirectory + '/Compare_Seeds/'
     else:
         outdir = os.path.abspath(outdir) + '/'
 
