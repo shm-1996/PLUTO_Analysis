@@ -1,6 +1,6 @@
-from header import *
-from FunctionInterface import *
-from Misc_Plots import * 
+from pluto_header import *
+from PlutoInterface import *
+from Pluto_Plots import * 
 import subprocess
 import socket
 

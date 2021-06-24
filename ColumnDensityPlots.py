@@ -1,5 +1,5 @@
 from pluto_header import *
-from FunctionInterface import *
+from PlutoInterface import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.style.use('classic')
