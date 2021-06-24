@@ -1,4 +1,4 @@
-from header import *
+from pluto_header import *
 from FunctionInterface import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)

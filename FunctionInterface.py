@@ -1,4 +1,4 @@
-from header import *
+from pluto_header import *
 
 def Compute_min_max(tstart,tend,directory='./',N=200,field='rho',slice_index=None):
     """
