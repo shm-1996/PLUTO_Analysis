@@ -3,6 +3,57 @@ from PlutoInterface import *
 import matplotlib as mpl
 mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.style.use('classic')
+
+def compute_projection(directory,direction='z',
+	tstart=100,tend=300,N=200,outdir=None,overwrite=False):
+
+	directory = os.path.abspath(directory)
+
+	if(os.path.isfile(outfir+'{}proj_{}'.format(field,
+		direction)) and overwrite is false):
+		print("Projection file present, reading from that. Use overwrite\
+to create new column density file")
+
+	m = constant.mH_HydrogenMass
+	k_boltzmann=constant.k_BoltzmannConstant
+	dl = (4.0/N)*ref.unit_Length
+	time = tstart
+	columndens = np.zeros((tend-tstart+1,N,N))
+
+
+	while time<=tend:
+		if(field == 'nodens'):
+			rho1d = read.readsinglefile(directory,time,N,'rho')
+			iongas1d = read.readsinglefile(directory,time,N,'ionx')
+			mu1d = (iongas1d*0.5+(1.-iongas1d)*1.0)*m
+			data1d = rho1d/mu1d
+		else:
+			data1d = read.readsinglefile(directory,time,N,field)
+
+		data = data1d.reshape(data1d,(N,N,N))
+		if(direction=='z'):
+			columndens[time-tstart] = data.sum(0) *dl
+		elif(direction =='y'):
+			columndens[time-tstart] = data.sum(1) *dl
+		elif(direction == 'x'):
+			columndens[time-tstart] = data.sum(2) *dl
+		else:
+			raise ValueError("Undefined direction for projection")
+
+		time = time+1
+
+	if(outdir is None):
+		outdir = directory 
+	else:
+		outdir = os.path.abspath(outdir)+'/'
+	
+	saveObj(columndens,outdir+'{}proj_{}'.format(field,direction))
+
+	return columndens
+
+
+
+
 def plotColumnDensity(directory,tstart=100,tend=300,N=200,outdir=None):
 
 	directory = os.path.abspath(directory)
