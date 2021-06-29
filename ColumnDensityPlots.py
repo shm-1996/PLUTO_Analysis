@@ -5,49 +5,81 @@ mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.style.use('classic')
 
 def compute_projection(directory,direction='z',
-	tstart=100,tend=300,N=200,outdir=None,overwrite=False):
+	time=100,N=200,outdir=None,overwrite=False):
+
+	"""
+	Routine to compute projection for a given timestep. 
+	Parameters:
+		directory: string
+			Directory where file exists
+		direction: string
+			Direction of the projection vector
+		time: integer
+			Timestep to calculate it on
+		N: integer
+			Resolution
+		outdir: string
+			Output directory to store column density pickles
+		overwrite: boolean
+			Flag to overwrite column density if already present
+
+	"""
 
 	directory = os.path.abspath(directory)
 
-	if(os.path.isfile(outfir+'{}proj_{}'.format(field,
-		direction)) and overwrite is false):
+	if(os.path.isfile(outfir+'{}{}proj_{}'.format(field,
+		direction,time)) and overwrite is false):
 		print("Projection file present, reading from that. Use overwrite\
 to create new column density file")
+
+		columndens = loadObj(outfir+'{}{}proj_{}'.format(field,
+		direction,time))
+		return columndens
 
 	m = constant.mH_HydrogenMass
 	k_boltzmann=constant.k_BoltzmannConstant
 	dl = (4.0/N)*ref.unit_Length
 	time = tstart
-	columndens = np.zeros((tend-tstart+1,N,N))
+	columndens = np.zeros(N,N)
 
+	if(field == 'nodens'):
+		rho1d = read.readsinglefile(directory,time,N,'rho')
+		iongas1d = read.readsinglefile(directory,time,N,'ionx')
+		mu1d = (iongas1d*0.5+(1.-iongas1d)*1.0)*m
+		data1d = rho1d/mu1d
+	else:
+		data1d = read.readsinglefile(directory,time,N,field)
 
-	while time<=tend:
-		if(field == 'nodens'):
-			rho1d = read.readsinglefile(directory,time,N,'rho')
-			iongas1d = read.readsinglefile(directory,time,N,'ionx')
-			mu1d = (iongas1d*0.5+(1.-iongas1d)*1.0)*m
-			data1d = rho1d/mu1d
-		else:
-			data1d = read.readsinglefile(directory,time,N,field)
-
-		data = data1d.reshape(data1d,(N,N,N))
-		if(direction=='z'):
-			columndens[time-tstart] = data.sum(0) *dl
-		elif(direction =='y'):
-			columndens[time-tstart] = data.sum(1) *dl
-		elif(direction == 'x'):
-			columndens[time-tstart] = data.sum(2) *dl
-		else:
-			raise ValueError("Undefined direction for projection")
-
-		time = time+1
+	data = data1d.reshape(data1d,(N,N,N))
+	if(direction=='z'):
+		columndens = data.sum(0) *dl
+	elif(direction =='y'):
+		columndens = data.sum(1) *dl
+	elif(direction == 'x'):
+		columndens = data.sum(2) *dl
+	else:
+		raise ValueError("Undefined direction for projection")
 
 	if(outdir is None):
 		outdir = directory 
 	else:
 		outdir = os.path.abspath(outdir)+'/'
 	
-	saveObj(columndens,outdir+'{}proj_{}'.format(field,direction))
+	saveObj(columndens,outfir+'{}{}proj_{}'.format(field,
+		direction,time))
+
+	return columndens
+
+def ReturnProjectionRange(directory,direction = 'z',
+	tstart=100,tend=300,N=200,overwrite=False):
+	
+	columndens = np.zeros((tend-tstart+1,N,N))
+	time = tstart
+	while time<=tend:
+		columndens[time-tstart] = compute_projection(directory = directory,
+			direction=direction,time=time,N=N,outdir=outdir,
+			overwrite=overwrite)
+		time = time+1
 
 	return columndens
 
